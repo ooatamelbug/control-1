@@ -1,150 +1,170 @@
 <?php
   ob_start();
   session_start();
-//  if (isset($_SESSION['ID']) && !empty($_SESSION['ID'])) {
+  if (isset($_SESSION['ID']) && !empty($_SESSION['ID'])) {
     include 'connectPDO.php';
     include 'includes/functions/funcs.php';
-?>
-<!DOCTYPE html>
-<html class="no-js">
     
-    <head>
-        <title>Admin Home Page</title>
-        <!-- Bootstrap -->
-        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
-        <link href="vendors/easypiechart/jquery.easy-pie-chart.css" rel="stylesheet" media="screen">
-        <link href="assets/styles.css" rel="stylesheet" media="screen">
-        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
-            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-        <script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    </head>
-    
-    <body>
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
-                     <span class="icon-bar"></span>
-                     <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="#">Admin Panel</a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav pull-right">
-                            <li class="dropdown">
-                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> Vincent Gabriel <i class="caret"></i>
+    if($_GET['id']){
+    include 'includes/header.php';
+    if($_GET['page'] == 'histoory' 
+    || $_GET['page'] == 'examination' 
+    || $_GET['page'] == 'reimplant' 
+    || $_GET['page'] == '3_months'
+    || $_GET['page'] == '6_months'
+    || $_GET['page'] == '9_months'
+    || $_GET['page'] == 'yrs_5_3'
+    || $_GET['page'] == 'yrs_5_2'
+    || $_GET['page'] == 'yr_5_1'
+    || $_GET['page'] == 'yr_1'
+    || $_GET['page'] == '2yrs'
+    || $_GET['page'] == '3yrs'
+    || $_GET['page'] == '4yrs'
+     ){
+            $page = $_GET['page'];
+            $stmt1 = $connect->prepare('SELECT * FROM '.$page.' where serial_number = ?'); 
+            $stmt1->execute(array($_GET['id']));
+            $row1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $row = $stmt1->rowCount();
 
-                                </a>
-                                <ul class="dropdown-menu">
-                                    
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a tabindex="-1" href="login.html">Logout</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="nav">
-                            <li class="active">
-                                <a href="#">Dashboard</a>
-                            </li>
-                            
-                        </ul>
-                    </div>
-                    <!--/.nav-collapse -->
-                </div>
-            </div>
-        </div>
+        ?>
+
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span3" id="sidebar">
-                    <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                        <li class="active">
-                            <a href="index.html"><i class="icon-chevron-right"></i> Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="calendar.html"><i class="icon-chevron-right"></i> Calendar</a>
-                        </li>
-                        <li>
-                            <a href="stats.html"><i class="icon-chevron-right"></i> Statistics (Charts)</a>
-                        </li>
-                        <li>
-                            <a href="form.html"><i class="icon-chevron-right"></i> Forms</a>
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="icon-chevron-right"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="buttons.html"><i class="icon-chevron-right"></i> Buttons & Icons</a>
-                        </li>
-                        <li>
-                            <a href="editors.html"><i class="icon-chevron-right"></i> WYSIWYG Editors</a>
-                        </li>
-                       
-                    </ul>
-                </div>
+            <?php include './includes/nav.php';?>
+
                 
                 <!--/span-->
                 <div class="span9" id="content">
                     <div class="row-fluid">
-                        <div class="alert alert-success">
-							<button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <h4>Success</h4>
-                        	The operation completed successfully</div>
-                        	<div class="navbar">
-                            	<div class="navbar-inner">
-	                                <ul class="breadcrumb">
-	                                    <i class="icon-chevron-left hide-sidebar"><a href='#' title="Hide Sidebar" rel='tooltip'>&nbsp;</a></i>
-	                                    <i class="icon-chevron-right show-sidebar" style="display:none;"><a href='#' title="Show Sidebar" rel='tooltip'>&nbsp;</a></i>
-	                                    <li>
-	                                        <a href="#">Dashboard</a> <span class="divider">/</span>	
-	                                    </li>
-	                                    <li>
-	                                        <a href="#">Settings</a> <span class="divider">/</span>	
-	                                    </li>
-	                                    <li class="active">Tools</li>
-	                                </ul>
-                            	</div>
-                        	</div>
-                    	</div>
-                    
+                    <?php include './includes/side.php';?>
+
                     <div class="row-fluid">
                         <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Gallery</div>
-                                <div class="pull-right"><span class="badge badge-info">1,462</span>
+                                <div class="muted pull-left">data</div>
+                                <div class="pull-right"><span class="badge badge-info"><?=$row?></span>
 
                                 </div>
                             </div>
                             <div class="block-content collapse in">
-                                
-
-
+                            <?php
+                                $v = 0;
+                                foreach ($row1 as $key => $value) {
+                                    echo' <div class="span12 panel panel-default"style="border-bottom: 2px solid #000;margin: 0 26px;">
+                                        
+                                            <div class="span6 panel " style="
+                                            background: #c8f1af;
+                                            padding: 10px;
+                                        ">'.$key.'</div>
+                                        
+                                        ';
+                                        if($value == Null){
+                                            echo ' <div class="span6 panel-footer" style="padding: 10px;position:relative">empty 
+                                                <button style="position: absolute;top: 5px;right: 25px;"
+                                                    type="button" class="btn btn-success"
+                                                    data-toggle="modal"
+                                                    data-target="#exampleModal'.$v.'">
+                                                        edit
+                                                </button>
+                                            <div class="modal fade" id="exampleModal'.$v.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                <form action="edit.php" method="post">
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="exampleInputPassword1">'.$key.'</label>
+                                                        <input type="text" class="form-control" name="value" value="'.$value.'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                                        <input type="hidden" class="form-control" name="table" value="'.$_GET['page'].'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                                        <input type="hidden" class="form-control" name="num" value="'.$_GET['id'].'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                                        <input type="hidden" class="form-control" name="key" value="'.$key.'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                            </div>
+                                                
+                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                    </form>         
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            </div>';
+                                        }else{
+                                        echo '<div class="span6 panel-footer" style="
+                                        padding: 10px 71px 10px 10px;position:relative">'.$value.'
+                                        <button style="position: absolute;top: 5px;right: 25px;"
+                                        type="button" class="btn btn-success"
+                                        data-toggle="modal"
+                                        data-target="#exampleModal'.$v.'">
+                                            edit
+                                    </button>
+                                <div class="modal fade" id="exampleModal'.$v.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <form action="edit.php" method="post">
+                                        
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">'.$key.'</label>
+                                            <input type="text" class="form-control" name="value" value="'.$value.'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                            <input type="hidden" class="form-control" name="table" value="'.$_GET['page'].'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                            <input type="hidden" class="form-control" name="num" value="'.$_GET['id'].'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                            <input type="hidden" class="form-control" name="type" value="'.gettype($value).'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                            <input type="hidden" class="form-control" name="key" value="'.$key.'" id="exampleInputPassword1" placeholder="'.$key.'">
+                                            </div>
+                                    
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        </form>         
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                                        </div>';}
+                                        echo'
+                                    </div>
+                                    <hr/>
+                                    ';
+                                    $v++;
+                                }
+                            ?>
                             </div>
                         </div>
+                        <!-- Button trigger modal -->
+
+
+        <!-- Modal -->
+                                
                         <!-- /block -->
                     </div>
                 </div>
             </div>
             <hr>
-            <footer class="text-center">
-                <p>&copy; MOH-18 2019</p>
-            </footer>
-        </div>
-        <!--/.fluid-container-->
-        <script src="vendors/jquery-1.9.1.min.js"></script>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
-        <script src="vendors/easypiechart/jquery.easy-pie-chart.js"></script>
-        <script src="assets/scripts.js"></script>
-        <script>
-        $(function() {
-            // Easy pie charts
-            $('.chart').easyPieChart({animate: 1000});
-        });
-        </script>
-    </body>
-
-</html>
+            
+            <?php 
+        }
+    
+        include './includes/footer.php';
+                            }
+}else{
+ header('location:login.php');
+    exit();
+}
+        ?>

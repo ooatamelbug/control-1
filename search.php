@@ -1,9 +1,17 @@
 <?php
   ob_start();
   session_start();
-//  if (isset($_SESSION['ID']) && !empty($_SESSION['ID'])) {
+ if (isset($_SESSION['ID']) && !empty($_SESSION['ID'])) {
     include 'connectPDO.php';
     include 'includes/functions/funcs.php';
+    $stmt1 = $connect->prepare("SELECT * FROM histoory"); 
+    $stmt1->execute();
+    $row1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    $row = $stmt1->rowCount();
+}else{
+    header('location:login.php');
+       exit();
+   }
 ?>
 <!DOCTYPE html>
 <html class="no-js">
@@ -36,7 +44,7 @@
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                             <li class="dropdown">
-                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> Vincent Gabriel <i class="caret"></i>
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> <?=$_SESSION['IDn']?>  <i class="caret"></i>
 
                                 </a>
                                 <ul class="dropdown-menu">
@@ -50,7 +58,7 @@
                         </ul>
                         <ul class="nav">
                             <li class="active">
-                                <a href="#">Dashboard</a>
+                                <a href="search.php">Dashboard</a>
                             </li>
                             
                         </ul>
@@ -90,7 +98,7 @@
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
                                 <div class="muted pull-left">search</div>
-                                <div class="pull-right"><span class="badge badge-info">1,462</span>
+                                <div class="pull-right"><span class="badge badge-info"><?=$row?></span>
 
                                 </div>
                             </div>
@@ -108,14 +116,15 @@
 											</tr>
 										</thead>
                                         <tbody>
-                                            <tr class="odd gradeX">
-                                                <td>Trident</td>
-                                                <td class="center"> 4</td>
-                                            </tr>
-                                            <tr class="even gradeC">
-                                                <td>Trident</td>
-                                                <td class="center">5</td>
-                                            </tr>
+                                        <?php 
+                                            foreach ($row1 as $key) {
+                                           echo ' <tr class="odd gradeX">
+                                                <td>'.$key["serial_number"].'</td>
+                                                <td class="center"> <a href="index.php?page=histoory&id='.$key["serial_number"].'">'.$key["name"].'</td>
+                                            </tr>';
+                                        }
+
+                                        ?>
                                         </tbody>
 									</table>
                                 </div>
